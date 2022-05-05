@@ -8,6 +8,7 @@ Examples from rust tutorials.
 ```
 rustup +nightly  component add rust-analyzer-preview
 rustup run nightly rust-analyzer
+cargo install rusty-tags
 ```
 - Make sure rust-analyzer is in the path.
 
@@ -49,6 +50,17 @@ map \cr :!clear; cargo run
 map \ct :!clear; cargo test -- --nocapture
 map \ft :%!rustfmt
 ```
+## Configure rusty-tags in _vimrc
+```
+function! RustyTags()
+  call system("rusty-tags vi")
+  let l:tpath=system("pwd")
+  let l:tpath= trim(l:tpath)."/rusty-tags.vi"
+  let &tags=l:tpath
+endfunction
+"run rusty-tags
+map \rt :call RustyTags() <RETURN>
+```
 
 ## Configure Debugger (gdb) in _vimrc
 ```
@@ -68,11 +80,28 @@ map \rg :call GdbSetup()
 3. Run the debugger with the executable `:TermDebug target/debug/prog`
     The gdb will now be running with the target executable.
 4. In the source window navigate to the first line and type `:Break`.
-    A breakpoint should now be set.
+    A breakpoint should now be set, :Clear to remove it.
 5. Type `:Run`
     Program execution point will be highlighted on the breakpoint line.
 6. Use the <Next> or (`:Over` command) button to step through the code.
 7. Mouse over variables to examine values
+8. Reload the binary from gdb ` file target/debug/prog`
+
+### Debug Rust Unit Test
+1. Open the rust source file with the test 'vim src/lib.rs'
+2. In vim press `\rg` to run gdb setup function GdbSetup()
+3. Run the test eg `cargo test -- test_is_pid`  gives output:
+```
+    Finished test [unoptimized + debuginfo] target(s) in 0.01s
+     Running unittests (target/debug/deps/clicker-514f7f3c89752650)
+
+running 1 test
+out:false
+test tests::test_is_pid ... ok
+
+```
+4. Run the debugger with the executable `:TermDebug target/debug/deps/clicker-514f7f3c89752650`
+5. Continue with debug workflow.
 
 ## Useful vim commands:
 ### Vim quickfix
@@ -80,5 +109,7 @@ map \rg :call GdbSetup()
 ### Clear quickfix list
 > :cexpr []
 ### Vim Help
-> :help Termdebug
-> :help using<Plug>
+```
+:help Termdebug
+:help using<Plug>
+```

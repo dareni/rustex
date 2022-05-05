@@ -9,6 +9,27 @@
 
 #[cfg(test)]
 pub mod tests {
+    #[test]
+    fn ref_test() {
+        use std::io::Error;
+        use std::io::ErrorKind;
+        use std::process::Child;
+
+        let mut var: Result<Child, Error> = Err(Error::new(ErrorKind::Other, "init"));
+
+        while var.is_err() && &var.as_ref().err().unwrap().to_string() != "abc" {
+            let tmp_str = &var.as_ref().err().unwrap();
+            println!("{}", tmp_str);
+
+            if tmp_str.to_string() == "init" {
+                var = Err(Error::new(ErrorKind::Other, "blah"));
+            } else if tmp_str.to_string() == "blah" {
+                var = Err(Error::new(ErrorKind::Other, "abc"));
+            }
+            var.as_ref().unwrap();
+        }
+    }
+
     //-Reborrow Example----------------------------------------------------------/
     #[test]
     fn reborrow_option() {
@@ -907,5 +928,33 @@ pub mod tests {
             *r2 = 6;
             println!("{}", *r2);
         }
+    }
+    //-Process Test-----------------------------------------------------------/
+    #[test]
+    pub fn process_test() {
+        use std::process::Command;
+
+        let mut cmd = Command::new("echo");
+        cmd.args(["blah"]);
+        let ps_data = cmd.output().expect("Could not run echo");
+        let echo: Vec<u8> = ps_data.stdout;
+        let data: &str = std::str::from_utf8(&echo).unwrap().trim();
+        println!("out:{}", data);
+    }
+    //-Logging Test-----------------------------------------------------------/
+    #[test]
+    pub fn debug_test() {
+        use log::debug;
+        use std::io;
+
+        std::env::set_var("RUST_LOG", "debug");
+        env_logger::init();
+
+        use std::io::Write;
+        print!("Test_output: ");
+        io::stdout().flush().unwrap();
+        debug!("DEBUGTEST");
+        println!("Test_output_done");
+        io::stdout().flush().unwrap();
     }
 }
