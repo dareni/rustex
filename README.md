@@ -6,8 +6,9 @@ Examples from rust tutorials.
 
 ## Install Rust
 ```
-rustup +nightly  component add rust-analyzer-preview
-rustup run nightly rust-analyzer
+curl --proto '=https' --tlsv1.3 https://sh.rustup.rs -sSf | sh
+rustup component add rust-analyzer
+rustup component add rust-src
 cargo install rusty-tags
 ```
 - Make sure rust-analyzer is in the path.
@@ -23,7 +24,7 @@ git clone https://github.com/vim-airline/vim-airline ~/.vim/pack/git-plugins/sta
 
 ###Configure linter in _vimrc
 ```
-let g:ale_linters = {'rust': ['analyzer', 'cargo', 'rls', 'rustc']}
+let g:ale_linters = {'rust': ['analyzer', 'cargo', 'rls']}
 let g:ale_fixers = { 'rust': ['rustfmt', 'trim_whitespace', 'remove_trailing_lines'] }
 let g:ale_completion_enabled = 1
 let g:ale_sign_column_always = 1
