@@ -78,7 +78,7 @@ map \rg :call GdbSetup()
 ### Debug Workflow example:
 1. Open rust source file.  `vim src/main.rs`
 2. In vim press `\rg` to run gdb setup function GdbSetup()
-3. Run the debugger with the executable `:TermDebug target/debug/prog`
+3. Run the debugger with the executable `:Termdebug target/debug/prog`
     The gdb will now be running with the target executable.
 4. In the source window navigate to the first line and type `:Break`.
     A breakpoint should now be set, :Clear to remove it.

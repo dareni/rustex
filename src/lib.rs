@@ -9,6 +9,18 @@
 
 #[cfg(test)]
 pub mod tests {
+
+    extern "C" {
+      fn abs(input: i32) -> i32;
+    }
+
+    #[test]
+    fn extern_c_test() {
+      unsafe {
+        println!("Absolute value of -3 according to C: {}", abs(-3));
+      }
+    }
+
     #[test]
     fn ref_test() {
         use std::io::Error;
